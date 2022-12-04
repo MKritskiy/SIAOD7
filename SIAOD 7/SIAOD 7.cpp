@@ -139,7 +139,6 @@ namespace ShenonFano {
 
 		// for storing symbol
 		string sym;
-
 		// for storing probability or frequency
 		float pro;
 		int arr[256];
@@ -269,6 +268,30 @@ namespace ShenonFano {
 			}
 		}
 		return count;
+	}
+	string encode(string test) {
+		int n = calcTops(test);
+		calcProbs(test, ShenonFano::p);
+		sortByProbability(n, ShenonFano::p);
+		for (int i = 0; i < n; i++)
+		{
+			ShenonFano::p[i].top = -1;
+		}
+		shannon(0, n - 1, ShenonFano::p);
+		display(n, ShenonFano::p);
+		string res = "";
+		for (char c : test)
+		{
+			for (auto e : p) {
+				if (e.sym[0] == c) {
+					for (int i = 0; i <= e.top; i++) {
+						res += to_string(e.arr[i]);
+					}
+				}
+
+			}
+		}
+		return res;
 	}
 }
 namespace Hofman {
@@ -418,43 +441,32 @@ int main()
 {
 	setlocale(LC_ALL, "ru");
 	ifstream fin("test.txt");
-	//string test = "Эни бэни рики паки Турбаурбасентибряки.\nМожет – выйдет, может – нет,\nВ общем – полный\nИнтернет";
-	string test;
+	string test = "Эни бэни рики паки Турбаурбасентибряки.\nМожет – выйдет, может – нет,\nВ общем – полный\nИнтернет";
 	string tmp;
-	while (!fin.eof()) {
-		getline(fin, tmp);
-		if (!fin.eof())
-			test += tmp;
-	}
-	fin.close();
+	//while (!fin.eof()) {
+	//	getline(fin, tmp);
+	//	if (!fin.eof())
+	//		test += tmp;
+	//}
+	//fin.close();
 	string str = Hofman::buildHuffmanTree(test);
 	cout << "\nOriginal string size: " << test.length() * 8 << endl;
-	ofstream fout("testout.bin", ios::binary);
-	fout << str;
-	fout.close();
 	cout << "\nEncoded size: " << str.length();
 
 
-	//int n = ShenonFano::calcTops(test);
-	//ShenonFano::calcProbs(test, ShenonFano::p);
-	//ShenonFano::sortByProbability(n, ShenonFano::p);
-	//for (int i = 0; i < n; i++)
-	//{
-	//	ShenonFano::p[i].top = -1;
-	//}
-	//ShenonFano::shannon(0, n - 1, ShenonFano::p);
-	//ShenonFano::display(n, ShenonFano::p);
+
+
+	//string encodedTest = ShenonFano::encode(test);
+	//cout << endl << "test size: " << test.length() * 8 << endl;
+	//cout << "encodedTest size: " << encodedTest.length() << endl;
+
+
 
 	//string encodedTest = lz78::encode(test);
-	//cout << test << "\tsize: " << test.length()<<endl;
-
-
-
-	//cout << encodedTest << "\tEncoded size: "<< encodedTest.length()<<endl;
-	//vector<lz77::Code> encodedTest = lz77::encode(test, 5);
 	//for (size_t i = 0; i < encodedTest.size(); i++)
 	//{
-	//	cout << "<" << encodedTest[i].diff << "," << encodedTest[i].len << ",";
-	//	cout<< encodedTest[i].sym << ">, ";
+	//	//cout << "<" << encodedTest[i].diff << "," << encodedTest[i].len << ",";
+	//	//cout<< encodedTest[i].sym << ">, ";
+	//	cout << encodedTest<<endl;
 	//}
 }
